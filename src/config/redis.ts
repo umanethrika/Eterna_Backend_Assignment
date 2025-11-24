@@ -10,12 +10,12 @@ const connection = new IORedis({
 });
 
 connection.on('connect', () => {
-  console.log('✅ Connected to Redis');
+  console.log('Connected to Redis');
 });
 
 connection.on('error', (err) => {
   // This will help us debug if Redis isn't running yet
-  console.log('❌ Redis Connection Failed (Is Redis installed?)');
+  console.log('Redis Connection Failed (Is Redis installed?)');
 });
 
 export default connection;

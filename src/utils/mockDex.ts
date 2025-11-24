@@ -15,7 +15,7 @@ export class MockDexRouter {
   async getRaydiumQuote(amount: number): Promise<Quote> {
     await sleep(1000); // Fake network delay [cite: 96]
     
-    // Formula from PDF: basePrice * (0.98 + random variance)
+    // Formula : basePrice * (0.98 + random variance)
     const price = this.basePrice * (0.98 + Math.random() * 0.04); 
     
     return {

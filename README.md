@@ -1,5 +1,3 @@
-Markdown
-
 # 🚀 Distributed Order Execution Engine
 
 A high-performance backend system for executing cryptocurrency orders on Solana. It features a concurrent queue system, real-time WebSocket updates, and intelligent DEX routing between Raydium and Meteora.
@@ -41,16 +39,20 @@ Run the following commands to get the code and install dependencies:
 git clone <your-repo-url>
 cd order-execution-engine
 npm install
+```
+
 2. Configure Environment
 Create a file named .env in the root directory and add the following configuration:
 
-Code snippet
-
+```bash
 PORT=3000
 REDIS_HOST=localhost
 REDIS_PORT=6379
 # Replace 'password' with your actual Postgres password
 DATABASE_URL=postgres://postgres:password@localhost:5432/order_execution_engine
+```
+
+
 3. Run the System
 The system requires two separate processes to run (Producer & Consumer). Open two terminal windows:
 

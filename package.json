@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts",
+    "build" : "tsc",
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",

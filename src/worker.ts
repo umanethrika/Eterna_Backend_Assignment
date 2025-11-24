@@ -14,7 +14,7 @@ const redisPublisher = new Redis({
   maxRetriesPerRequest: null
 });
 
-console.log('👷 Worker started! Listening for orders...');
+console.log('Worker started! Listening for orders...');
 
 const worker = new Worker('order-execution-queue', async (job) => {
   const { orderId, amount } = job.data;
@@ -33,7 +33,7 @@ const worker = new Worker('order-execution-queue', async (job) => {
     ]);
 
     const bestQuote = raydiumQuote.price < meteoraQuote.price ? raydiumQuote : meteoraQuote;
-    console.log(`✅ Best Route: ${bestQuote.dex}`);
+    console.log(`Best Route: ${bestQuote.dex}`);
 
     // PHASE 2: EXECUTING
     await updateStatus(orderId, 'submitted', { 
@@ -55,10 +55,10 @@ const worker = new Worker('order-execution-queue', async (job) => {
       txHash: result.txHash 
     }));
 
-    console.log(`🎉 Order ${orderId} Complete!`);
+    console.log(`Order ${orderId} Complete!`);
 
   } catch (error: any) {
-    console.error(`⚠️ Attempt ${job.attemptsMade + 1} Failed for ${orderId}: ${error.message}`);
+    console.error(`Attempt ${job.attemptsMade + 1} Failed for ${orderId}: ${error.message}`);
     // IMPORTANT: We throw the error so BullMQ knows to retry!
     throw error;
   }
@@ -72,7 +72,7 @@ const worker = new Worker('order-execution-queue', async (job) => {
 worker.on('failed', async (job, err) => {
   if (job) {
     const { orderId } = job.data;
-    console.error(`❌ Order ${orderId} FAILED PERMANENTLY after all attempts.`);
+    console.error(`Order ${orderId} FAILED PERMANENTLY after all attempts.`);
     
     // Update DB to failed
     await pool.query('UPDATE orders SET status = $1 WHERE order_id = $2', ['failed', orderId]);

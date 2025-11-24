@@ -4,6 +4,7 @@ import { Redis } from 'ioredis';
 import { initDB } from './config/db';
 import './config/redis'; 
 import orderRoutes from './routes/orderRoutes';
+import './worker';
 
 // Load the websocket plugin
 const websocket = require('@fastify/websocket');
@@ -27,8 +28,8 @@ const start = async () => {
     });
 
     redisSubscriber.subscribe('order-updates', (err) => {
-      if (err) console.error('❌ Failed to subscribe to Redis channel:', err);
-      else console.log('📡 Subscribed to order updates channel');
+      if (err) console.error('Failed to subscribe to Redis channel:', err);
+      else console.log('Subscribed to order updates channel');
     });
 
     // 4. Define WebSocket Route (Standard Syntax with Safety Fix)
@@ -41,11 +42,11 @@ const start = async () => {
         const { orderId } = req.params;
         
         if (!socket) {
-          console.error("❌ WebSocket connection object is missing!");
+          console.error("WebSocket connection object is missing!");
           return;
         }
 
-        console.log(`🟢 Client connected via WebSocket for order: ${orderId}`);
+        console.log(`Client connected via WebSocket for order: ${orderId}`);
 
         const messageHandler = (channel: string, message: string) => {
           if (channel === 'order-updates') {
@@ -69,20 +70,20 @@ const start = async () => {
 
         // Cleanup when client disconnects
         socket.on('close', () => {
-          console.log(`🔴 Client disconnected: ${orderId}`);
+          console.log(`Client disconnected: ${orderId}`);
           redisSubscriber.removeListener('message', messageHandler);
         });
         
         // Handle errors to prevent crash
         socket.on('error', (err: any) => {
-          console.error(`⚠️ Socket error for order ${orderId}:`, err);
+          console.error(`Socket error for order ${orderId}:`, err);
         });
       });
     });
 
     // 5. Start Server
     await server.listen({ port: 3000 });
-    console.log('🚀 Server is running at http://localhost:3000');
+    console.log('Server is running at http://localhost:3000');
 
   } catch (err) {
     server.log.error(err);
