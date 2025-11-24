@@ -93,7 +93,8 @@ const start = async () => {
 
     // 5. SERVE THE DASHBOARD ON HOME PAGE
     server.get('/', async (req, reply) => {
-      return reply.sendFile('index.html');
+      // Cast reply to 'any' to stop TypeScript from complaining
+      return (reply as any).sendFile('index.html');
     });
 
     // 6. Start Server
