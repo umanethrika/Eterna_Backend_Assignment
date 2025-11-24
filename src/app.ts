@@ -1,13 +1,15 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import path from 'path'; // Import Path module
 import { Redis } from 'ioredis';
 import { initDB } from './config/db';
 import './config/redis'; 
 import orderRoutes from './routes/orderRoutes';
-import './worker';
+import './worker'; // Runs the worker in the same process (Required for Free Tier)
 
-// Load the websocket plugin
+// Load plugins
 const websocket = require('@fastify/websocket');
+const fastifyStatic = require('@fastify/static'); // Import Static Plugin
 
 const server = Fastify({ logger: true });
 
@@ -16,11 +18,18 @@ const start = async () => {
     // 1. Register Plugins
     await server.register(cors, { origin: true });
     await server.register(websocket); // Must be registered before routes
+    
+    // REGISTER STATIC FILES (This serves the HTML dashboard)
+    // Points to the 'public' folder in your root directory
+    await server.register(fastifyStatic, {
+      root: path.join(__dirname, '../public'), 
+    });
+
     await server.register(orderRoutes);
 
     // 2. Initialize Database
     await initDB();
-    const PORT = parseInt(process.env.PORT || '3000')
+    const PORT = parseInt(process.env.PORT || '3000');
 
     // 3. Setup Redis Subscriber
     const redisSubscriber = new Redis({
@@ -82,10 +91,15 @@ const start = async () => {
       });
     });
 
-    // 5. Start Server
+    // 5. SERVE THE DASHBOARD ON HOME PAGE
+    server.get('/', async (req, reply) => {
+      return reply.sendFile('index.html');
+    });
+
+    // 6. Start Server
     await server.listen({ port: PORT, host: '0.0.0.0' });
-    // console.log('Server is running at http://localhost:3000');
-    console.log(`Server is running at http://0.0.0.0:${PORT}`);
+    console.log(`🚀 Server is running at http://0.0.0.0:${PORT}`);
+
   } catch (err) {
     server.log.error(err);
     process.exit(1);
