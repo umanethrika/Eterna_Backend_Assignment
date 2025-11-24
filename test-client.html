@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Order Status Tracker</h2>
+    <p><b>Order ID:</b> <span id="orderId">Waiting...</span></p>
+    <div id="logs" style="border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: scroll; background: #f9f9f9;"></div>
+
+    <script>
+        async function startTest() {
+            // 1. Create an Order via API
+            const response = await fetch('http://localhost:3000/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'market', side: 'buy', amount: 100 })
+            });
+            const data = await response.json();
+            const orderId = data.orderId;
+            
+            document.getElementById('orderId').innerText = orderId;
+            addLog(`Order Created: ${orderId}`);
+
+            // 2. Connect to WebSocket
+            const ws = new WebSocket(`ws://localhost:3000/ws/orders/${orderId}`);
+            
+            ws.onopen = () => addLog('🟢 WebSocket Connected!');
+            ws.onmessage = (event) => {
+                const update = JSON.parse(event.data);
+                addLog(`⚡ STATUS UPDATE: ${update.status.toUpperCase()} ${update.message || ''}`);
+                if (update.txHash) addLog(`🎉 DONE! Hash: ${update.txHash}`);
+            };
+        }
+
+        function addLog(msg) {
+            const div = document.getElementById('logs');
+            div.innerHTML += `<div>${msg}</div>`;
+            div.scrollTop = div.scrollHeight;
+        }
+
+        startTest();
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    /* File Layout - UNCOMMENT THESE */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Module Settings - CHANGE THESE FOR EASIER COMPATIBILITY */
+    "module": "commonjs",             /* Changed from nodenext */
+    "target": "es2016",               /* Changed from esnext */
+    "esModuleInterop": true,
+
+    /* Strict Typechecking */
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
