@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "4652b5ff-c90b-4f4e-86a0-5ebd433bc3f3",
+		"name": "Order Execution Engine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50324636",
+		"_collection_link": "https://dsp3569-1519460.postman.co/workspace/Nagalla-Devisri-Prasad's-Worksp~33dc20ba-0a4e-4213-846d-e58442169903/collection/50324636-4652b5ff-c90b-4f4e-86a0-5ebd433bc3f3?action=share&source=collection_link&creator=50324636"
+	},
+	"item": [
+		{
+			"name": "Submit Market Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"type\": \"market\",\r\n  \"side\": \"buy\",\r\n  \"amount\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://order-execution-engine-2em3.onrender.com/orders",
+					"protocol": "https",
+					"host": [
+						"order-execution-engine-2em3",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
