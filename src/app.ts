@@ -20,6 +20,7 @@ const start = async () => {
 
     // 2. Initialize Database
     await initDB();
+    const PORT = parseInt(process.env.PORT || '3000')
 
     // 3. Setup Redis Subscriber
     const redisSubscriber = new Redis({
@@ -82,9 +83,9 @@ const start = async () => {
     });
 
     // 5. Start Server
-    await server.listen({ port: 3000 });
-    console.log('Server is running at http://localhost:3000');
-
+    await server.listen({ port: PORT, host: '0.0.0.0' });
+    // console.log('Server is running at http://localhost:3000');
+    console.log(`Server is running at http://0.0.0.0:${PORT}`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);
